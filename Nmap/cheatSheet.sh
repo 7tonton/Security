@@ -48,6 +48,12 @@ nmap -A 54.186.250.79
 
 ----------
 
+# Fingerprinting (for OS scan)
+nmap -O 54.186.250.79
+
+----------
+
+
 # Trace path to host (all the routers you pass through)
 nmap --traceroute thenewboston.com
 
